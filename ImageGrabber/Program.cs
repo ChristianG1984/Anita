@@ -23,6 +23,7 @@ namespace ImageGrabber
             var asyncFetch = new AsyncCancellable<FetchCelebrityPicturesData>();
             var sync = new Synchronizer<IEnumerable<SearchCelebrityAnswerData>>();
             var syncProgressInfo = new Synchronizer<FetchProgressInfo>();
+            var syncErrorData = new Synchronizer<ErrorData>();
             var packetHandler = new PacketHandler<CancelTarget<string>, IEnumerable<SearchCelebrityAnswerData>>();
             var settingStore = new Store();
 
@@ -41,10 +42,12 @@ namespace ImageGrabber
 
             grabber.SearchResult += packetHandler.InputUnique;
             grabber.OutputFetchProgressInfo += syncProgressInfo.Input;
+            grabber.OutputError += syncErrorData.Input;
             
             sync.Output += ui.ShowCelebritySearchResult;
             syncProgressInfo.Output += ui.InputFetchProgressInfo;
-            
+            syncErrorData.Output += ui.ReceiveErrorData;
+
             settingStore.OutputSetting += ui.InputSetting;
 
             settingStore.DistributeSettings();

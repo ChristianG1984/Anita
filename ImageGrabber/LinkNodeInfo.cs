@@ -11,5 +11,6 @@ namespace ImageGrabber
         public int CurrentNumber { get; set; }
         public int MaxImageCount { get; set; }
         public HtmlNode LinkNode { get; set; }
+        public Exception Error { get; set; }
     }
 }
