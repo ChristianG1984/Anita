@@ -29,14 +29,35 @@ namespace ImageGrabber
                 return;
             }
 
-            var streamToSend = webReq.GetRequestStream();
+            Stream streamToSend = null;
+            try {
+                streamToSend = webReq.GetRequestStream();
+            }
+            catch (Exception ex) {
+                OutputError(new ErrorData("SearchCelebrity failed", ex));
+                return;
+            }
             streamToSend.Write(data, 0, data.Length);
             streamToSend.Close();
             streamToSend.Dispose();
 
-            var webResp = (HttpWebResponse)webReq.GetResponse();
+            HttpWebResponse webResp = null;
+            try {
+                webResp = (HttpWebResponse)webReq.GetResponse();
+            }
+            catch (Exception ex) {
+                OutputError(new ErrorData("SearchCelebrity failed", ex));
+                return;
+            }
             var result = new List<SearchCelebrityAnswerData>();
-            var answer = webResp.GetResponseStream();
+            Stream answer = null;
+            try {
+                answer = webResp.GetResponseStream();
+            }
+            catch (Exception ex) {
+                OutputError(new ErrorData("SearchCelebrity failed", ex));
+                return;
+            }
             var htmlDoc = new HtmlDocument();
             htmlDoc.Load(answer, new UTF8Encoding());
             answer.Close();
@@ -73,14 +94,26 @@ namespace ImageGrabber
             webReq.Method = "GET";
             webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            var webResp = (HttpWebResponse)webReq.GetResponse();
-            var answer = webResp.GetResponseStream();
+            HttpWebResponse webResp = null;
+            Stream answer = null;
+            try {
+                webResp = (HttpWebResponse)webReq.GetResponse();
+                answer = webResp.GetResponseStream();
+            }
+            catch (Exception ex) {
+                OutputError(new ErrorData("FetchCelebrityPictures failed", ex));
+                return;
+            }
             var htmlDoc = new HtmlDocument();
             htmlDoc.Load(answer, new UTF8Encoding());
             answer.Close();
-            
+
             foreach (var linkNodeInfo in getNextLinkNode(htmlDoc)) {
                 if (cancelToken.IsCancellationRequested == true) { return; }
+                if (linkNodeInfo.Error != null) {
+                    OutputError(new ErrorData("FetchCelebrityPictures failed (enumerate linkNodeInfos)", linkNodeInfo.Error));
+                    continue;
+                }
                 var a = linkNodeInfo.LinkNode;
                 var picUriPath = a.Attributes["href"].Value;
                 var thumbUriPath = a.ChildNodes["img"].Attributes["src"].Value;
@@ -97,9 +130,11 @@ namespace ImageGrabber
 
         public event Action<UniqueData<IEnumerable<SearchCelebrityAnswerData>>> SearchResult;
         public event Action<FetchProgressInfo> OutputFetchProgressInfo;
+        public event Action<ErrorData> OutputError;
 
         private IEnumerable<LinkNodeInfo> getNextLinkNode(HtmlDocument htmlDoc)
         {
+            Exception error = null;
             var cid = getCid(htmlDoc);
             var picsLeft = getPicsLeft(htmlDoc);
             var lastPid = getLastPid(htmlDoc);
@@ -122,14 +157,47 @@ namespace ImageGrabber
                 webReq.Method = "POST";
                 webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-                var streamToSend = webReq.GetRequestStream();
+                Stream streamToSend = null;
+                try {
+                    streamToSend = webReq.GetRequestStream();
+                }
+                catch (Exception ex) {
+                    error = ex;
+                }
+                
+                if (error != null) {
+                    yield return new LinkNodeInfo { Error = error };
+                    yield break;
+                }
                 streamToSend.Write(data, 0, data.Length);
                 streamToSend.Close();
                 streamToSend.Dispose();
 
-                var webResp = (HttpWebResponse)webReq.GetResponse();
+                HttpWebResponse webResp = null;
+                try {
+                    webResp = (HttpWebResponse)webReq.GetResponse();
+                }
+                catch (Exception ex) {
+                    error = ex;
+                }
+
+                if (error != null) {
+                    yield return new LinkNodeInfo { Error = error };
+                    yield break;
+                }
                 var result = new List<SearchCelebrityAnswerData>();
-                var answer = webResp.GetResponseStream();
+                Stream answer = null;
+                try {
+                    answer = webResp.GetResponseStream();
+                }
+                catch (Exception ex) {
+                    error = ex;
+                }
+
+                if (error != null) {
+                    yield return new LinkNodeInfo { Error = error };
+                    yield break;
+                }
                 var sr = new StreamReader(answer, new UTF8Encoding());
                 var answerStrings = sr.ReadToEnd().Split('|');
                 sr.Close();

@@ -47,12 +47,18 @@ namespace ImageGrabber
                 progressInfo.PicUriPath;
         }
 
+        public void ReceiveErrorData(ErrorData error)
+        {
+            txtRawContent.Text = error.Description + ":" + Environment.NewLine + error.Error.Message;
+        }
+
         public event Action<string> SearchCelebrityRequest;
         public event Action<FetchCelebrityPicturesData> FetchCelebrityPicturesRequest;
         public event Action<KeyValuePair<string, string>> StoreSettingRequest;
 
         private void btnFetchData_Click(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             var item = lstResults.SelectedItem as SearchCelebrityAnswerData;
             if (item == null) {
                 return;
@@ -67,6 +73,7 @@ namespace ImageGrabber
 
         private void btnSelectFolder_Click(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             var fbd = new FolderBrowserDialog();
             fbd.SelectedPath = Path.GetDirectoryName(Application.ExecutablePath);
             if (fbd.ShowDialog(this) == DialogResult.OK) {
@@ -77,6 +84,7 @@ namespace ImageGrabber
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             lblSelectedName.Text = string.Empty;
             btnFetchData.Enabled = false;
             SearchCelebrityRequest(txtSearch.Text);
@@ -84,11 +92,13 @@ namespace ImageGrabber
 
         private void txtBasePath_TextChanged(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             StoreSettingRequest(txtBaseFolder.Text.AsStorable("ui.BasePath"));
         }
 
         private void lstResults_SelectedIndexChanged(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             var item = lstResults.SelectedItem as SearchCelebrityAnswerData;
             if (item == null) {
                 lblSelectedName.Text = string.Empty;
@@ -101,6 +111,7 @@ namespace ImageGrabber
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            txtRawContent.Text = string.Empty;
             _cancelTokenSource.Cancel();
             _cancelTokenSource = null;
             btnCancel.Visible = false;
