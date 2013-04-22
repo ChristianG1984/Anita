@@ -42,13 +42,13 @@
             // txtRawContent
             // 
             this.txtRawContent.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRawContent.Location = new System.Drawing.Point(12, 520);
+            this.txtRawContent.Location = new System.Drawing.Point(12, 391);
             this.txtRawContent.MaxLength = 999999;
             this.txtRawContent.Multiline = true;
             this.txtRawContent.Name = "txtRawContent";
             this.txtRawContent.ReadOnly = true;
             this.txtRawContent.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRawContent.Size = new System.Drawing.Size(736, 72);
+            this.txtRawContent.Size = new System.Drawing.Size(736, 201);
             this.txtRawContent.TabIndex = 0;
             // 
             // btnFetchData
