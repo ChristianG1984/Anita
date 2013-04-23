@@ -45,6 +45,7 @@ namespace ImageGrabber
         {
             if (progressInfo.IsFinished == true) {
                 lblProgressInfo.Text = "Finished the download!";
+                btnCancel.Visible = false;
             } else {
                 lblProgressInfo.Text = "#" + progressInfo.LinkNodeInfo.CurrentNumber + " of " + progressInfo.LinkNodeInfo.MaxImageCount + ":\n" +
                     progressInfo.PicUriPath;
