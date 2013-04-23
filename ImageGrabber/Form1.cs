@@ -87,6 +87,7 @@ namespace ImageGrabber
         {
             txtRawContent.Text = string.Empty;
             lblSelectedName.Text = string.Empty;
+            lblProgressInfo.Text = string.Empty;
             btnFetchData.Enabled = false;
             SearchCelebrityRequest(txtSearch.Text);
         }
