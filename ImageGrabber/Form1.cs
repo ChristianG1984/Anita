@@ -43,8 +43,12 @@ namespace ImageGrabber
 
         public void InputFetchProgressInfo(FetchProgressInfo progressInfo)
         {
-            lblProgressInfo.Text = "#" + progressInfo.LinkNodeInfo.CurrentNumber + " of " + progressInfo.LinkNodeInfo.MaxImageCount + ":\n" +
-                progressInfo.PicUriPath;
+            if (progressInfo.IsFinished == true) {
+                lblProgressInfo.Text = "Finished the download!";
+            } else {
+                lblProgressInfo.Text = "#" + progressInfo.LinkNodeInfo.CurrentNumber + " of " + progressInfo.LinkNodeInfo.MaxImageCount + ":\n" +
+                    progressInfo.PicUriPath;
+            }
         }
 
         public void ReceiveErrorData(ErrorData error)

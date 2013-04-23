@@ -10,5 +10,6 @@ namespace ImageGrabber
         public SearchCelebrityAnswerData CelebritySearchResult { get; set; }
         public LinkNodeInfo LinkNodeInfo { get; set; }
         public string PicUriPath { get; set; }
+        public bool IsFinished { get; set; }
     }
 }
