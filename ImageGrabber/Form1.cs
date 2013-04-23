@@ -74,6 +74,8 @@ namespace ImageGrabber
                 BaseFolder = txtBaseFolder.Text
             };
             btnFetchData.Enabled = false;
+            txtSearch.Enabled = false;
+            lstResults.Enabled = false;
             FetchCelebrityPicturesRequest(data);
         }
 
