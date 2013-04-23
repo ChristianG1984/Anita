@@ -68,6 +68,7 @@ namespace ImageGrabber
                 SearchCelebrityAnswerData = item,
                 BaseFolder = txtBaseFolder.Text
             };
+            btnFetchData.Enabled = false;
             FetchCelebrityPicturesRequest(data);
         }
 
@@ -115,6 +116,7 @@ namespace ImageGrabber
             _cancelTokenSource.Cancel();
             _cancelTokenSource = null;
             btnCancel.Visible = false;
+            btnFetchData.Enabled = true;
         }
 
         private CancellationTokenSource _cancelTokenSource;
