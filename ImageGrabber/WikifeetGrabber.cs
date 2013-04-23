@@ -126,6 +126,11 @@ namespace ImageGrabber
                 OutputFetchProgressInfo(progressInfo);
                 fetchImage(localStoreRootPath, celebrityName, picUriPath);
             }
+            OutputFetchProgressInfo(new FetchProgressInfo
+            {
+                CelebritySearchResult = metaInfos.Data.SearchCelebrityAnswerData,
+                IsFinished = true
+            });
         }
 
         public event Action<UniqueData<IEnumerable<SearchCelebrityAnswerData>>> SearchResult;

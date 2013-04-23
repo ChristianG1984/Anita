@@ -43,8 +43,15 @@ namespace ImageGrabber
 
         public void InputFetchProgressInfo(FetchProgressInfo progressInfo)
         {
-            lblProgressInfo.Text = "#" + progressInfo.LinkNodeInfo.CurrentNumber + " of " + progressInfo.LinkNodeInfo.MaxImageCount + ":\n" +
-                progressInfo.PicUriPath;
+            if (progressInfo.IsFinished == true) {
+                lblProgressInfo.Text = "Finished the download!";
+                btnCancel.Visible = false;
+                txtSearch.Enabled = true;
+                lstResults.Enabled = true;
+            } else {
+                lblProgressInfo.Text = "#" + progressInfo.LinkNodeInfo.CurrentNumber + " of " + progressInfo.LinkNodeInfo.MaxImageCount + ":\n" +
+                    progressInfo.PicUriPath;
+            }
         }
 
         public void ReceiveErrorData(ErrorData error)
@@ -68,6 +75,9 @@ namespace ImageGrabber
                 SearchCelebrityAnswerData = item,
                 BaseFolder = txtBaseFolder.Text
             };
+            btnFetchData.Enabled = false;
+            txtSearch.Enabled = false;
+            lstResults.Enabled = false;
             FetchCelebrityPicturesRequest(data);
         }
 
@@ -86,6 +96,7 @@ namespace ImageGrabber
         {
             txtRawContent.Text = string.Empty;
             lblSelectedName.Text = string.Empty;
+            lblProgressInfo.Text = string.Empty;
             btnFetchData.Enabled = false;
             SearchCelebrityRequest(txtSearch.Text);
         }
@@ -115,6 +126,9 @@ namespace ImageGrabber
             _cancelTokenSource.Cancel();
             _cancelTokenSource = null;
             btnCancel.Visible = false;
+            txtSearch.Enabled = true;
+            lstResults.Enabled = true;
+            btnFetchData.Enabled = true;
         }
 
         private CancellationTokenSource _cancelTokenSource;
