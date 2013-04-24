@@ -158,7 +158,7 @@
             this.Controls.Add(this.btnFetchData);
             this.Controls.Add(this.txtRawContent);
             this.Name = "Form1";
-            this.Text = "Anita";
+            this.Text = "Anita (R1)";
             this.ResumeLayout(false);
             this.PerformLayout();
 
