@@ -50,7 +50,30 @@ That's all to say about how the application currently works. :smiley:
 ----------
 ## Future Plans ##
 
-**Will come soon! Stay tuned!**
+### What will be realized soon? ###
+
+- **Make it possible to download more than one celebrity at once!**  
+    Theoretically, from a technical point of view, this is already possible. But the GUI is not yet ready to handle this properly. (Of course, that part was poorly designed at first, because it started as an experiment.)  
+    But this will be an high priority feature!
+- **"ClickOnce" Synchronization**  
+    Imagine, that you have already downloaded hundreds of celebrities. A month later, maybe, you wonder if there are new pictures of your favorite celebrities available. It would be not funny to manually search for them and hit "Fetch Data" for each one.  
+    So, it should be possible, that you simply click one time on the "Synchronize" button and let the software handle this for you.
+
+### What would be nice to have, but not a critical feature? ###
+
+- **Show small pictures of the celebrities faces!**  
+    When you stumble upon a new celebrity name, you have no clue, how she looks like. A small pic within the search results would be really helpful. (I would grab the pic from imdb.com or so.)
+- **Search not only for the real name, but also for the character name from any movie!**  
+    Think of a situation, where you watch a movie and in that situation, you only know the current character/role name of the actress. You could just search for that name and would possibly find her real name. (For that, I would also use imdb.com or so.)
+- **Provide a more detailed progress information**  
+    Some info like "??? MB of ??? MB" downloaded. (But that's not so necessary. I would focus more on the other tasks.)
+
+### What are the long term goals? ###
+
+- **Make the application highly modular**  
+    Yeah! This would be an essential step to make the application a multipurpose (image) downloader.  
+    To make this possible, I want invent a general purpose framework, which could be also used for other applications. This will result in a separate project.  
+    That project may grow within the progress of _Anita_.
 
 ## For Developers ##
 
