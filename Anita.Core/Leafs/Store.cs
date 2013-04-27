@@ -6,7 +6,7 @@ using System.Reflection;
 using System.IO;
 using System.Collections;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Leafs
 {
     public class Store
     {
