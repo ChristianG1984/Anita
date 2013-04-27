@@ -46,6 +46,7 @@
     <Compile Include="Leafs\CancelProvider.cs" />
     <Compile Include="Leafs\PacketHandler.cs" />
     <Compile Include="Leafs\Store.cs" />
+    <Compile Include="Leafs\Synchronizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
