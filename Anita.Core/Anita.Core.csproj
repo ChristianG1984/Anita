@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoreComposition.cs" />
     <Compile Include="Compositions\AsyncCancellable.cs" />
     <Compile Include="Leafs\Asynchronizer.cs" />
     <Compile Include="Leafs\AutoCanceller.cs" />
