@@ -55,7 +55,6 @@
     <Compile Include="CancelProvider.cs" />
     <Compile Include="CancelSource.cs" />
     <Compile Include="CancelTarget.cs" />
-    <Compile Include="ErrorData.cs" />
     <Compile Include="SearchCelebrityAnswerData.cs" />
     <Compile Include="FetchCelebrityPicturesData.cs" />
     <Compile Include="FetchProgressInfo.cs" />
