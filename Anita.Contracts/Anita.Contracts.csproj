@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CancelSource.cs" />
+    <Compile Include="Data\CancelTarget.cs" />
     <Compile Include="Data\ErrorData.cs" />
     <Compile Include="Data\UniqueData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
