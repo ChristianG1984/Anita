@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using SachsenCoder.Anita.Contracts.Data;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Leafs
 {
     sealed class CancelProvider<T>
     {

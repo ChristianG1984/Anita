@@ -5,9 +5,9 @@ using System.Text;
 using SachsenCoder.Anita.Contracts.Data;
 using SachsenCoder.Anita.Core.Leafs;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Compositions
 {
-    sealed class AsyncCancellable<T>
+    public sealed class AsyncCancellable<T>
     {
         public AsyncCancellable()
         {
