@@ -51,6 +51,7 @@
     <Compile Include="Data\LinkNodeInfo.cs" />
     <Compile Include="Data\SearchCelebrityAnswerData.cs" />
     <Compile Include="Data\UniqueData.cs" />
+    <Compile Include="MyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using System.Diagnostics;
 using System.IO;
 using SachsenCoder.Anita.Contracts.Data;
+using SachsenCoder.Anita.Contracts;
 
 namespace ImageGrabber
 {
