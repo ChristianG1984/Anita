@@ -23,6 +23,8 @@ namespace SachsenCoder.Anita.Core
             var packetHandler = new PacketHandler<CancelTarget<string>, IEnumerable<SearchCelebrityAnswerData>>();
             var settingStore = new Store();
 
+            _loadSettings += settingStore.DistributeSettings;
+
             ui.SearchCelebrityRequest += async.Input;
             ui.FetchCelebrityPicturesRequest += asyncFetch.Input;
             ui.StoreSettingRequest += settingStore.ReceiveSettingForStorage;
@@ -45,8 +47,13 @@ namespace SachsenCoder.Anita.Core
             syncErrorData.Output += ui.ReceiveErrorData;
 
             settingStore.OutputSetting += ui.InputSetting;
-
-            settingStore.DistributeSettings();
         }
+
+        public void LoadSettings()
+        {
+            _loadSettings();
+        }
+
+        private event Action _loadSettings;
     }
 }

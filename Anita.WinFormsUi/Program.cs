@@ -18,6 +18,7 @@ namespace SachsenCoder.Anita.WinFormsUi
             var ui = new MainWindow();
             var coreComposition = new CoreComposition(ui);
 
+            coreComposition.LoadSettings();
             Application.Run(ui);
         }
     }
