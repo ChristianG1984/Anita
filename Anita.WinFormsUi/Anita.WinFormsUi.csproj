@@ -72,7 +72,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="Synchronizer.cs" />
-    <Compile Include="UniqueData.cs" />
     <Compile Include="WikifeetGrabber.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -97,6 +96,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Anita.Contracts\Anita.Contracts.csproj">
+      <Project>{AB38BB3E-3595-40B8-ADB2-A86E45C6438D}</Project>
+      <Name>Anita.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Anita.Core\Anita.Core.csproj">
+      <Project>{EE1BF00C-0CA4-478F-9AEE-588C18E0AE00}</Project>
+      <Name>Anita.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
