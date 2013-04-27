@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using HtmlAgilityPack;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Contracts.Data
 {
     public struct LinkNodeInfo
     {
