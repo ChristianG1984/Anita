@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Leafs
 {
     public class Asynchronizer<T>
     {
