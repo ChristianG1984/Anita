@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using SachsenCoder.Anita.Contracts.Data;
 
 namespace ImageGrabber
 {

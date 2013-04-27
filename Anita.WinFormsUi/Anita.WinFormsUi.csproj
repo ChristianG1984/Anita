@@ -53,7 +53,6 @@
     <Compile Include="Asynchronizer.cs" />
     <Compile Include="AutoCanceller.cs" />
     <Compile Include="CancelProvider.cs" />
-    <Compile Include="CancelSource.cs" />
     <Compile Include="CancelTarget.cs" />
     <Compile Include="SearchCelebrityAnswerData.cs" />
     <Compile Include="FetchCelebrityPicturesData.cs" />

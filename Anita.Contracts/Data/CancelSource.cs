@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Contracts.Data
 {
     public sealed class CancelSource<T>
     {

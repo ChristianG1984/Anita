@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using SachsenCoder.Anita.Contracts.Data;
 
 namespace ImageGrabber
 {
