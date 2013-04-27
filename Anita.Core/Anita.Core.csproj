@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Compositions\AsyncCancellable.cs" />
     <Compile Include="Leafs\Asynchronizer.cs" />
+    <Compile Include="Leafs\AutoCanceller.cs" />
     <Compile Include="Leafs\CancelProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

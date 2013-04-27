@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using SachsenCoder.Anita.Contracts.Data;
 using SachsenCoder.Anita.Core.Compositions;
+using SachsenCoder.Anita.Core.Leafs;
 
 namespace ImageGrabber
 {

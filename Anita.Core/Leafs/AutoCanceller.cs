@@ -6,9 +6,9 @@ using System.Threading;
 using System.Diagnostics;
 using SachsenCoder.Anita.Contracts.Data;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Leafs
 {
-    sealed class AutoCanceller<T>
+    public sealed class AutoCanceller<T>
     {
         public void Input(CancelSource<T> cancelSource)
         {
