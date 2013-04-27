@@ -77,9 +77,14 @@ That's all to say about how the application currently works. :smiley:
 
 ## For Developers ##
 
+#### Update 27.04.2013: ####
+
+The internal structure is much more better now! It fulfills my personal sense for a well code structure. The worst piece of code is currently the "WikifeetGrabber.cs". (That's the place, where the **spike** resides).
+But I will get rid of it soon. Step by step. Not to much at once. :wink:
+
+#### Comment for the initial state of the code ####
+
 This application is more a **spike**. The code is not so well as it could be. (Think of clean code, for example.)
 It was my first time, where I used the HttpRequest/HttpResponse stuff.
-
-
 
 [1]: http://en.wikipedia.org/wiki/Ajax_(programming)
