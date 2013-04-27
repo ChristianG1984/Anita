@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,9 +50,12 @@
     <Compile Include="Leafs\PacketHandler.cs" />
     <Compile Include="Leafs\Store.cs" />
     <Compile Include="Leafs\Synchronizer.cs" />
+    <Compile Include="Leafs\WikifeetGrabber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anita.Contracts\Anita.Contracts.csproj">
       <Project>{AB38BB3E-3595-40B8-ADB2-A86E45C6438D}</Project>

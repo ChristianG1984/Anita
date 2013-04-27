@@ -10,7 +10,7 @@ using System.IO;
 using SachsenCoder.Anita.Contracts.Data;
 using SachsenCoder.Anita.Contracts;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.Core.Leafs
 {
     public class WikifeetGrabber
     {
