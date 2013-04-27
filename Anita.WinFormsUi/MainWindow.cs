@@ -7,11 +7,11 @@ using System.Windows.Forms;
 using SachsenCoder.Anita.Contracts.Data;
 using SachsenCoder.Anita.Contracts;
 
-namespace ImageGrabber
+namespace SachsenCoder.Anita.WinFormsUi
 {
-    public partial class Form1 : Form, IUserInterface
+    public partial class MainWindow : Form, IUserInterface
     {
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
             lblSelectedName.Text = string.Empty;
