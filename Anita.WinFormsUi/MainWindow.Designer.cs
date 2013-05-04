@@ -142,7 +142,7 @@
             this.btnCancel.Visible = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -157,8 +157,8 @@
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnFetchData);
             this.Controls.Add(this.txtRawContent);
-            this.Name = "Form1";
-            this.Text = "Anita (R1)";
+            this.Name = "MainWindow";
+            this.Text = "Anita (R1.1)";
             this.ResumeLayout(false);
             this.PerformLayout();
 

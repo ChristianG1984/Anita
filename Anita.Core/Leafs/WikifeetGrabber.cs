@@ -236,13 +236,19 @@ namespace SachsenCoder.Anita.Core.Leafs
             yield break;
         }
 
-        private static void fetchImage(string localStoreRootPath, string celebrityName, string picUriPath)
+        private void fetchImage(string localStoreRootPath, string celebrityName, string picUriPath)
         {
             var targetFolder = Path.Combine(localStoreRootPath, celebrityName);
             var picUri = new Uri(picUriPath);
 
             if (Directory.Exists(targetFolder) == false) {
-                Directory.CreateDirectory(targetFolder);
+                try {
+                    Directory.CreateDirectory(targetFolder);
+                }
+                catch (Exception ex) {
+                    OutputError(new ErrorData(string.Format("fetchImage failed! Could not create Directory:\r\n\"{0}\"", targetFolder), ex));
+                    return;
+                }
             }
 
             var targetFullPath = Path.Combine(targetFolder, picUri.Segments[1]);

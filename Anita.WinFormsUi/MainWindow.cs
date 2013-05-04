@@ -58,7 +58,8 @@ namespace SachsenCoder.Anita.WinFormsUi
 
         public void ReceiveErrorData(ErrorData error)
         {
-            txtRawContent.Text = error.Description + ":" + Environment.NewLine + error.Error.Message;
+            btnCancel_Click(this, EventArgs.Empty);
+            txtRawContent.Text = error.Description + Environment.NewLine + Environment.NewLine + error.Error.Message;
         }
 
         public event Action<string> SearchCelebrityRequest;
@@ -125,8 +126,10 @@ namespace SachsenCoder.Anita.WinFormsUi
         private void btnCancel_Click(object sender, EventArgs e)
         {
             txtRawContent.Text = string.Empty;
-            _cancelTokenSource.Cancel();
-            _cancelTokenSource = null;
+            if (_cancelTokenSource != null) {
+                _cancelTokenSource.Cancel();
+                _cancelTokenSource = null;
+            }
             btnCancel.Visible = false;
             txtSearch.Enabled = true;
             lstResults.Enabled = true;
