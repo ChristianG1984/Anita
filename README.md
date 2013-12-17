@@ -17,6 +17,10 @@ You can download the latest executable **Anita_R1.1.zip** there: **<https://driv
 
 ### Release Notes ###
 
+#### Anita R1.2 (Date: 17.12.2013) ####
+
+-Bugfix: Issue #10
+
 #### Anita R1.1 (Date: 04.05.2013) ####
 
 - Bugfix: Issue #9
