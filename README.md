@@ -13,7 +13,7 @@ But here is _Anita_ and comes for rescue. :smile:
 
 ## Download the executable ##
 
-You can download the latest executable **Anita_R1.1.zip** there: **<https://drive.google.com/folderview?id=0B0p6jU6QiR9-MVpkSXhZRFh6TVE&usp=sharing>**
+You can download the latest executable **Anita_R1.2.zip** there: **<https://drive.google.com/folderview?id=0B0p6jU6QiR9-MVpkSXhZRFh6TVE&usp=sharing>**
 
 ### Release Notes ###
 
