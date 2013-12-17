@@ -23,7 +23,7 @@ namespace SachsenCoder.Anita.Core.Leafs
             }
 
             var data = string.Format(@"req=suggest&value={0}", searchText.Data.Data).ToUriString().ToUTF8Bytes();
-            var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.pl"));
+            var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.fpl"));
             webReq.Method = "POST";
             webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
