@@ -13,18 +13,8 @@ But here is _Anita_ and comes for rescue. :smile:
 
 ## Download the executable ##
 
-You can download the latest executable **Anita_R1.2.zip** there: **<https://drive.google.com/folderview?id=0B0p6jU6QiR9-MVpkSXhZRFh6TVE&usp=sharing>**
-
-### Release Notes ###
-
-#### Anita R1.2 (Date: 17.12.2013) ####
-
--Bugfix: Issue #10
-
-#### Anita R1.1 (Date: 04.05.2013) ####
-
-- Bugfix: Issue #9
-- Internal code restructuring: Issue #6
+You can find the latest executable here on Github:
+<https://github.com/SachsenCoder/Anita/releases>
 
 ## Usage Guide ##
 

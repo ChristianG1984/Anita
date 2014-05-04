@@ -160,7 +160,7 @@ namespace SachsenCoder.Anita.Core.Leafs
 
             while (picsLeft > 0) {
                 var data = string.Format(@"req=morepics&cid={0}&lastpid={1}", cid, lastPid).ToUriString().ToUTF8Bytes();
-                var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.pl"));
+                var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.fpl"));
                 webReq.Method = "POST";
                 webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
