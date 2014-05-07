@@ -116,9 +116,17 @@ namespace SachsenCoder.Anita.Core.Leafs
                     OutputError(new ErrorData("FetchCelebrityPictures failed (enumerate linkNodeInfos)", linkNodeInfo.Error));
                     continue;
                 }
-                var a = linkNodeInfo.LinkNode;
-                var picUriPath = a.Attributes["href"].Value;
-                var thumbUriPath = a.ChildNodes["img"].Attributes["src"].Value;
+                string picUriPath = string.Empty;
+                string thumbUriPath = string.Empty;
+                HtmlNode a = linkNodeInfo.LinkNode;
+                try {
+                    picUriPath = a.Attributes["href"].Value;
+                    thumbUriPath = a.ChildNodes["img"].Attributes["src"].Value;
+                }
+                catch (NullReferenceException ex) {
+                    OutputError(new ErrorData(string.Format("Problem with URL! The picture \"{0}\" will be skipped!", picUriPath), ex));
+                    continue;
+                }
                 var progressInfo = new FetchProgressInfo
                 {
                     CelebritySearchResult = metaInfos.Data.SearchCelebrityAnswerData,
