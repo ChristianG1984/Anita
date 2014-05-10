@@ -158,7 +158,7 @@
             this.Controls.Add(this.btnFetchData);
             this.Controls.Add(this.txtRawContent);
             this.Name = "MainWindow";
-            this.Text = "Anita (R1.3)";
+            this.Text = "Anita (R1.4)";
             this.ResumeLayout(false);
             this.PerformLayout();
 

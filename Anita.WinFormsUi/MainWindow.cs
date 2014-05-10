@@ -58,8 +58,11 @@ namespace SachsenCoder.Anita.WinFormsUi
 
         public void ReceiveErrorData(ErrorData error)
         {
-            btnCancel_Click(this, EventArgs.Empty);
             txtRawContent.Text = error.Description + Environment.NewLine + Environment.NewLine + error.Error.Message;
+            if (error.Description.Contains("Problem with URL!")) {
+                return;
+            }
+            btnCancel_Click(this, EventArgs.Empty);
         }
 
         public event Action<string> SearchCelebrityRequest;
