@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using HtmlAgilityPack;
 
 namespace SachsenCoder.Anita.Contracts.Data
 {
@@ -10,7 +9,6 @@ namespace SachsenCoder.Anita.Contracts.Data
     {
         public int CurrentNumber { get; set; }
         public int MaxImageCount { get; set; }
-        public HtmlNode LinkNode { get; set; }
         public Exception Error { get; set; }
     }
 }
