@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Xml;
-using HtmlAgilityPack;
+using CsQuery;
+using Jurassic;
 using System.Diagnostics;
 using System.IO;
 using SachsenCoder.Anita.Contracts.Data;
@@ -21,7 +22,7 @@ namespace SachsenCoder.Anita.Core.Leafs
             if (cancelToken.IsCancellationRequested == true) {
                 return;
             }
-
+            
             var data = string.Format(@"req=suggest&value={0}", searchText.Data.Data).ToUriString().ToUTF8Bytes();
             var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.fpl"));
             webReq.Method = "POST";
@@ -60,17 +61,17 @@ namespace SachsenCoder.Anita.Core.Leafs
                 OutputError(new ErrorData("SearchCelebrity failed", ex));
                 return;
             }
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.Load(answer, new UTF8Encoding());
+            var dom = new CQ(answer, new UTF8Encoding());
             answer.Close();
-            var tds = htmlDoc.DocumentNode.SelectNodes("//@onclick");
+            var tds = dom.Select("[onclick]");
+
             if (tds == null) {
                 SearchResult(UniqueData.Create(result.AsEnumerable(), searchText.Id));
                 return;
             }
 
             foreach (var node in tds) {
-                var attr = node.Attributes["onclick"].Value;
+                var attr = node.Attributes["onclick"];
                 var idx = attr.IndexOf(".value='") + 8;
                 var sub = attr.Substring(idx);
                 idx = sub.IndexOf("';");
@@ -106,31 +107,31 @@ namespace SachsenCoder.Anita.Core.Leafs
                 OutputError(new ErrorData("FetchCelebrityPictures failed", ex));
                 return;
             }
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.Load(answer, new UTF8Encoding());
+            CQ dom = new CQ(answer, new UTF8Encoding());
+            var jEngine = new ScriptEngine();
             answer.Close();
 
-            foreach (var linkNodeInfo in getNextLinkNode(htmlDoc)) {
+            processJavaScript(dom, jEngine);
+
+            var messanger = jEngine.GetGlobalValue<Jurassic.Library.ObjectInstance>("messanger");
+            var cfname = (string)messanger.GetPropertyValue("cfname");
+            var gdata = (Jurassic.Library.ArrayInstance)messanger.GetPropertyValue("gdata");
+            var maxCount = gdata.Length;
+            var currentNumber = 0;
+            foreach (Jurassic.Library.ObjectInstance element in gdata.ElementValues) {
                 if (cancelToken.IsCancellationRequested == true) { return; }
-                if (linkNodeInfo.Error != null) {
-                    OutputError(new ErrorData("FetchCelebrityPictures failed (enumerate linkNodeInfos)", linkNodeInfo.Error));
-                    continue;
-                }
-                string picUriPath = string.Empty;
-                string thumbUriPath = string.Empty;
-                HtmlNode a = linkNodeInfo.LinkNode;
-                try {
-                    picUriPath = a.Attributes["href"].Value;
-                    thumbUriPath = a.ChildNodes["img"].Attributes["src"].Value;
-                }
-                catch (NullReferenceException ex) {
-                    OutputError(new ErrorData(string.Format("Problem with URL! The picture \"{0}\" will be skipped!", picUriPath), ex));
-                    continue;
-                }
+                ++currentNumber;
+                var pid = (int)element.GetPropertyValue("pid");
+                var picUriPath = "http://pics.wikifeet.com/" + cfname + "-Feet-" + pid + ".jpg";
+
                 var progressInfo = new FetchProgressInfo
                 {
                     CelebritySearchResult = metaInfos.Data.SearchCelebrityAnswerData,
-                    LinkNodeInfo = linkNodeInfo,
+                    LinkNodeInfo = new LinkNodeInfo
+                    {
+                        CurrentNumber = currentNumber,
+                        MaxImageCount = (int)maxCount
+                    },
                     PicUriPath = picUriPath
                 };
                 OutputFetchProgressInfo(progressInfo);
@@ -147,101 +148,44 @@ namespace SachsenCoder.Anita.Core.Leafs
         public event Action<FetchProgressInfo> OutputFetchProgressInfo;
         public event Action<ErrorData> OutputError;
 
-        private IEnumerable<LinkNodeInfo> getNextLinkNode(HtmlDocument htmlDoc)
+        private void processJavaScript(CQ dom, ScriptEngine jEngine)
         {
-            Exception error = null;
-            var cid = getCid(htmlDoc);
-            var picsLeft = getPicsLeft(htmlDoc);
-            var lastPid = getLastPid(htmlDoc);
-            var linkNodes = htmlDoc.DocumentNode.SelectNodes("//div[@id='thepics']//a");
-            var maxCount = linkNodes.Count + picsLeft;
-            var currentNumber = 0;
+            var scriptPathNodes = dom.Select("script[src]");
 
-            foreach (var node in linkNodes) {
-                yield return new LinkNodeInfo
-                {
-                    CurrentNumber = ++currentNumber,
-                    MaxImageCount = maxCount,
-                    LinkNode = node
-                };
-            }
-
-            while (picsLeft > 0) {
-                var data = string.Format(@"req=morepics&cid={0}&lastpid={1}", cid, lastPid).ToUriString().ToUTF8Bytes();
-                var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.fpl"));
-                webReq.Method = "POST";
+            foreach (var node in scriptPathNodes) {
+                var scriptUri = new Uri(node.Attributes["src"], UriKind.Relative);
+                var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, scriptUri));
+                webReq.Method = "GET";
                 webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-                Stream streamToSend = null;
-                try {
-                    streamToSend = webReq.GetRequestStream();
-                }
-                catch (Exception ex) {
-                    error = ex;
-                }
-                
-                if (error != null) {
-                    yield return new LinkNodeInfo { Error = error };
-                    yield break;
-                }
-                streamToSend.Write(data, 0, data.Length);
-                streamToSend.Close();
-                streamToSend.Dispose();
-
                 HttpWebResponse webResp = null;
-                try {
-                    webResp = (HttpWebResponse)webReq.GetResponse();
-                }
-                catch (Exception ex) {
-                    error = ex;
-                }
-
-                if (error != null) {
-                    yield return new LinkNodeInfo { Error = error };
-                    yield break;
-                }
-                var result = new List<SearchCelebrityAnswerData>();
                 Stream answer = null;
                 try {
+                    webResp = (HttpWebResponse)webReq.GetResponse();
                     answer = webResp.GetResponseStream();
                 }
                 catch (Exception ex) {
-                    error = ex;
+                    OutputError(new ErrorData("FetchCelebrityPictures failed", ex));
+                    return;
                 }
 
-                if (error != null) {
-                    yield return new LinkNodeInfo { Error = error };
-                    yield break;
-                }
-                var sr = new StreamReader(answer, new UTF8Encoding());
-                var answerStrings = sr.ReadToEnd().Split('|');
+                var sr = new StreamReader(answer);
+                var script = new StringBuilder();
+                script.AppendLine("var window = new Object();");
+                script.Append(sr.ReadToEnd());
                 sr.Close();
                 sr.Dispose();
-
-                if (int.TryParse(answerStrings[1], out picsLeft) == false) {
-                    yield break;
-                }
-
-                var lastPidString = answerStrings[2].Split(',').Last();
-                if (int.TryParse(lastPidString, out lastPid) == false) {
-                    yield break;
-                }
-
-                htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(answerStrings[0]);
-                linkNodes = htmlDoc.DocumentNode.SelectNodes("//a");
-
-                foreach (var node in linkNodes) {
-                    yield return new LinkNodeInfo
-                    {
-                        CurrentNumber = ++currentNumber,
-                        MaxImageCount = maxCount,
-                        LinkNode = node
-                    };
-                }
+                jEngine.Execute(script.ToString());
             }
 
-            yield break;
+            scriptPathNodes = dom.Select("div#conts script").First();
+            jEngine.Execute(scriptPathNodes.Text());
+
+            scriptPathNodes = dom.Select("div#thepics script");
+            var strReader = new StringReader(scriptPathNodes.Text());
+            jEngine.Execute(strReader.ReadLine());
+            jEngine.Execute(strReader.ReadLine());
+            strReader.Dispose();
         }
 
         private void fetchImage(string localStoreRootPath, string celebrityName, string picUriPath)
@@ -275,57 +219,6 @@ namespace SachsenCoder.Anita.Core.Leafs
             finally {
                 webClient.Dispose();
             }
-        }
-
-        private static int getCid(HtmlDocument htmlDoc)
-        {
-            var scriptNode = htmlDoc.DocumentNode.SelectNodes("//script[not(@*)]");
-            if (scriptNode == null) {
-                return -1;
-            }
-
-            int cid;
-            var cidString = scriptNode[0].InnerText.Split(';')[0].Split('=')[1].Trim();
-            if (int.TryParse(cidString, out cid) == false) {
-                return -1;
-            }
-            return cid;
-        }
-
-        private static int getPicsLeft(HtmlDocument htmlDoc)
-        {
-            var div = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='morepics']");
-            if (div == null) {
-                return -1;
-            }
-            if (string.IsNullOrWhiteSpace(div.InnerText) == true) {
-                return 0;
-            }
-
-            int picsLeft;
-            var picsLeftString = div.ChildNodes[HtmlNode.HtmlNodeTypeNameText].InnerText.Split(' ')[0];
-            if (int.TryParse(picsLeftString, out picsLeft) == false) {
-                return -1;
-            }
-            return picsLeft;
-        }
-
-        private static int getLastPid(HtmlDocument htmlDoc)
-        {
-            var button = htmlDoc.DocumentNode.SelectSingleNode("//div[@id='morepics']//@onclick");
-            if (button == null) {
-                return -1;
-            }
-
-            int lastPid = 0;
-            var lastPidString = button.Attributes["onclick"].Value;
-            var start = lastPidString.IndexOf('(') + 1;
-            var end = lastPidString.LastIndexOf(')');
-            lastPidString = lastPidString.Substring(start, end - start);
-            if (int.TryParse(lastPidString, out lastPid) == false) {
-                return -1;
-            }
-            return lastPid;
         }
 
         private Uri _wikiBaseUri = new Uri("http://www.wikifeet.com", UriKind.Absolute);
