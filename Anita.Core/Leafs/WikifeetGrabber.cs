@@ -153,7 +153,11 @@ namespace SachsenCoder.Anita.Core.Leafs
             var scriptPathNodes = dom.Select("script[src]");
 
             foreach (var node in scriptPathNodes) {
-                var scriptUri = new Uri(node.Attributes["src"], UriKind.Relative);
+                Uri scriptUri;
+                try {
+                    scriptUri = new Uri(node.Attributes["src"], UriKind.Relative);
+                }
+                catch (UriFormatException) { continue; }
                 var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, scriptUri));
                 webReq.Method = "GET";
                 webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
