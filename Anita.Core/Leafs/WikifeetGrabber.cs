@@ -121,7 +121,7 @@ namespace SachsenCoder.Anita.Core.Leafs
             foreach (Jurassic.Library.ObjectInstance element in gdata.ElementValues) {
                 if (cancelToken.IsCancellationRequested == true) { return; }
                 ++currentNumber;
-                var pid = (int)element.GetPropertyValue("pid");
+                var pid = int.Parse(element.GetPropertyValue("pid") as string);
                 var picUriPath = "http://pics.wikifeet.com/" + cfname + "-Feet-" + pid + ".jpg";
 
                 var progressInfo = new FetchProgressInfo
