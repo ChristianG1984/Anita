@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SachsenCoder (private person; non-commercial)")]
 [assembly: AssemblyProduct("Anita")]
-[assembly: AssemblyCopyright("Copyright © SachsenCoder 2015")]
+[assembly: AssemblyCopyright("Copyright © SachsenCoder 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.7")]
-[assembly: AssemblyFileVersion("1.0.1.7")]
+[assembly: AssemblyVersion("1.0.1.8")]
+[assembly: AssemblyFileVersion("1.0.1.8")]

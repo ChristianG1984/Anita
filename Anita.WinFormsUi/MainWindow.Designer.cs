@@ -42,21 +42,23 @@
             // txtRawContent
             // 
             this.txtRawContent.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRawContent.Location = new System.Drawing.Point(12, 391);
+            this.txtRawContent.Location = new System.Drawing.Point(18, 602);
+            this.txtRawContent.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtRawContent.MaxLength = 999999;
             this.txtRawContent.Multiline = true;
             this.txtRawContent.Name = "txtRawContent";
             this.txtRawContent.ReadOnly = true;
             this.txtRawContent.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRawContent.Size = new System.Drawing.Size(736, 201);
+            this.txtRawContent.Size = new System.Drawing.Size(1102, 307);
             this.txtRawContent.TabIndex = 0;
             // 
             // btnFetchData
             // 
             this.btnFetchData.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFetchData.Location = new System.Drawing.Point(754, 608);
+            this.btnFetchData.Location = new System.Drawing.Point(1131, 935);
+            this.btnFetchData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnFetchData.Name = "btnFetchData";
-            this.btnFetchData.Size = new System.Drawing.Size(198, 72);
+            this.btnFetchData.Size = new System.Drawing.Size(297, 111);
             this.btnFetchData.TabIndex = 1;
             this.btnFetchData.Text = "Fetch Data";
             this.btnFetchData.UseVisualStyleBackColor = true;
@@ -65,9 +67,10 @@
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSearch.Location = new System.Drawing.Point(754, 16);
+            this.txtSearch.Location = new System.Drawing.Point(1131, 25);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(198, 26);
+            this.txtSearch.Size = new System.Drawing.Size(295, 36);
             this.txtSearch.TabIndex = 2;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
@@ -75,10 +78,11 @@
             // 
             this.lstResults.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstResults.FormattingEnabled = true;
-            this.lstResults.ItemHeight = 18;
-            this.lstResults.Location = new System.Drawing.Point(754, 48);
+            this.lstResults.ItemHeight = 27;
+            this.lstResults.Location = new System.Drawing.Point(1131, 74);
+            this.lstResults.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lstResults.Name = "lstResults";
-            this.lstResults.Size = new System.Drawing.Size(198, 526);
+            this.lstResults.Size = new System.Drawing.Size(295, 787);
             this.lstResults.TabIndex = 3;
             this.lstResults.SelectedIndexChanged += new System.EventHandler(this.lstResults_SelectedIndexChanged);
             // 
@@ -86,18 +90,20 @@
             // 
             this.lblSelectedName.AutoSize = true;
             this.lblSelectedName.Font = new System.Drawing.Font("Consolas", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSelectedName.Location = new System.Drawing.Point(9, 9);
+            this.lblSelectedName.Location = new System.Drawing.Point(14, 14);
+            this.lblSelectedName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSelectedName.Name = "lblSelectedName";
-            this.lblSelectedName.Size = new System.Drawing.Size(90, 28);
+            this.lblSelectedName.Size = new System.Drawing.Size(138, 42);
             this.lblSelectedName.TabIndex = 5;
             this.lblSelectedName.Text = "label1";
             // 
             // txtBaseFolder
             // 
             this.txtBaseFolder.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBaseFolder.Location = new System.Drawing.Point(68, 608);
+            this.txtBaseFolder.Location = new System.Drawing.Point(102, 935);
+            this.txtBaseFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtBaseFolder.Name = "txtBaseFolder";
-            this.txtBaseFolder.Size = new System.Drawing.Size(615, 26);
+            this.txtBaseFolder.Size = new System.Drawing.Size(920, 36);
             this.txtBaseFolder.TabIndex = 6;
             this.txtBaseFolder.TextChanged += new System.EventHandler(this.txtBasePath_TextChanged);
             // 
@@ -105,18 +111,20 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(8, 611);
+            this.label1.Location = new System.Drawing.Point(12, 940);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 19);
+            this.label1.Size = new System.Drawing.Size(77, 28);
             this.label1.TabIndex = 7;
             this.label1.Text = "Base:";
             // 
             // btnSelectFolder
             // 
             this.btnSelectFolder.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSelectFolder.Location = new System.Drawing.Point(689, 609);
+            this.btnSelectFolder.Location = new System.Drawing.Point(1034, 937);
+            this.btnSelectFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSelectFolder.Name = "btnSelectFolder";
-            this.btnSelectFolder.Size = new System.Drawing.Size(59, 25);
+            this.btnSelectFolder.Size = new System.Drawing.Size(88, 38);
             this.btnSelectFolder.TabIndex = 8;
             this.btnSelectFolder.Text = "...";
             this.btnSelectFolder.UseVisualStyleBackColor = true;
@@ -125,17 +133,19 @@
             // lblProgressInfo
             // 
             this.lblProgressInfo.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProgressInfo.Location = new System.Drawing.Point(11, 48);
+            this.lblProgressInfo.Location = new System.Drawing.Point(16, 74);
+            this.lblProgressInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblProgressInfo.Name = "lblProgressInfo";
-            this.lblProgressInfo.Size = new System.Drawing.Size(737, 106);
+            this.lblProgressInfo.Size = new System.Drawing.Size(1106, 163);
             this.lblProgressInfo.TabIndex = 9;
             this.lblProgressInfo.Text = "label2";
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(617, 15);
+            this.btnCancel.Location = new System.Drawing.Point(926, 23);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(112, 35);
             this.btnCancel.TabIndex = 10;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -144,9 +154,9 @@
             // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 692);
+            this.ClientSize = new System.Drawing.Size(1446, 1065);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblProgressInfo);
             this.Controls.Add(this.btnSelectFolder);
@@ -157,8 +167,9 @@
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnFetchData);
             this.Controls.Add(this.txtRawContent);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainWindow";
-            this.Text = "Anita (R1.7)";
+            this.Text = "Anita (R1.8)";
             this.ResumeLayout(false);
             this.PerformLayout();
 

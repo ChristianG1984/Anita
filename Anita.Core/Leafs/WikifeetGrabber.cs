@@ -179,7 +179,11 @@ namespace SachsenCoder.Anita.Core.Leafs
                 script.Append(sr.ReadToEnd());
                 sr.Close();
                 sr.Dispose();
-                jEngine.Execute(script.ToString());
+                try
+                {
+                    jEngine.Execute(script.ToString());
+                }
+                catch (JavaScriptException) { }
             }
 
             scriptPathNodes = dom.Select("div#conts script").First();
