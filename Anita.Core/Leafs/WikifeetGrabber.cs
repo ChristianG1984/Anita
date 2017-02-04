@@ -186,7 +186,7 @@ namespace SachsenCoder.Anita.Core.Leafs
                 catch (JavaScriptException) { }
             }
 
-            scriptPathNodes = dom.Select("div#conts script").First();
+            scriptPathNodes = dom.Select("div#conts script")[1].Cq();
             jEngine.Execute(scriptPathNodes.Text());
 
             scriptPathNodes = dom.Select("div#thepics script");
