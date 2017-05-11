@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using SachsenCoder.Anita.Contracts.Data;
 using SachsenCoder.Anita.Contracts;
+using System.Net.Cache;
 
 namespace SachsenCoder.Anita.Core.Leafs
 {
@@ -26,6 +27,8 @@ namespace SachsenCoder.Anita.Core.Leafs
             var data = string.Format(@"req=suggest&value={0}", searchText.Data.Data).ToUriString().ToUTF8Bytes();
             var webReq = (HttpWebRequest)WebRequest.Create(new Uri(_wikiBaseUri, @"perl/ajax.fpl"));
             webReq.Method = "POST";
+            webReq.ContentType = "application/x-www-form-urlencoded";
+            webReq.UserAgent = "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 52.0.2743.116 Safari / 537.36 Edge / 15.15063";
             webReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             if (cancelToken.IsCancellationRequested == true) {
@@ -122,7 +125,7 @@ namespace SachsenCoder.Anita.Core.Leafs
                 if (cancelToken.IsCancellationRequested == true) { return; }
                 ++currentNumber;
                 var pid = int.Parse(element.GetPropertyValue("pid") as string);
-                var picUriPath = "http://pics.wikifeet.com/" + cfname + "-Feet-" + pid + ".jpg";
+                var picUriPath = "https://pics.wikifeet.com/" + cfname + "-Feet-" + pid + ".jpg";
 
                 var progressInfo = new FetchProgressInfo
                 {
@@ -183,7 +186,7 @@ namespace SachsenCoder.Anita.Core.Leafs
                 {
                     jEngine.Execute(script.ToString());
                 }
-                catch (JavaScriptException) { }
+                catch (JavaScriptException ex) { Debug.WriteLine(ex.ToString()); }
             }
 
             scriptPathNodes = dom.Select("div#conts script")[1].Cq();
@@ -191,6 +194,7 @@ namespace SachsenCoder.Anita.Core.Leafs
 
             scriptPathNodes = dom.Select("div#thepics script");
             var strReader = new StringReader(scriptPathNodes.Text());
+            jEngine.Execute(strReader.ReadLine());
             jEngine.Execute(strReader.ReadLine());
             jEngine.Execute(strReader.ReadLine());
             strReader.Dispose();
@@ -229,6 +233,6 @@ namespace SachsenCoder.Anita.Core.Leafs
             }
         }
 
-        private Uri _wikiBaseUri = new Uri("http://www.wikifeet.com", UriKind.Absolute);
+        private Uri _wikiBaseUri = new Uri("https://www.wikifeet.com", UriKind.Absolute);
     }
 }

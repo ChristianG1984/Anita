@@ -169,7 +169,7 @@
             this.Controls.Add(this.txtRawContent);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainWindow";
-            this.Text = "Anita (R1.9)";
+            this.Text = "Anita (R1.10)";
             this.ResumeLayout(false);
             this.PerformLayout();
 
