@@ -48,7 +48,11 @@
     },
     "dependencies": {
         "electron-compile": "^6.4.2",
-        "electron-squirrel-startup": "^1.0.0"
+        "electron-squirrel-startup": "^1.0.0",
+        "jquery": "^3.2.1",
+        "request": "^2.83.0",
+        "request-progress": "^3.0.0",
+        "underscore": "^1.8.3"
     },
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",

@@ -1,6 +1,7 @@
 "use strict"
 
 import { app, BrowserWindow } from 'electron';
+const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -8,7 +9,9 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  require('electron-reload')(__dirname);
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, '..\\', 'node_modules', '.bin', 'electron')
+  });
 }
 
 // Keep a global reference of the window object, if you don't, the window will
