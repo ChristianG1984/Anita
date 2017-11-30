@@ -1,7 +1,8 @@
 "use strict"
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 const path = require('path');
+const https = require('https');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -64,3 +65,69 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+var pendingRequest;
+
+ipcMain.on("search:request", function(event, arg) {
+  var responseObject = {
+    data: ''
+  };
+  var querystring = require('querystring');
+  var resData = '';
+  console.log(arg);
+
+  if (pendingRequest) {
+    pendingRequest.abort();
+  }
+
+  const postData = {
+    gender: 0,
+    req: 'suggest',
+    value: arg
+  }
+
+  console.log(postData);
+
+  const postDataString = querystring.stringify(postData);
+
+  console.log(postDataString);
+
+  const options = {
+    hostname: 'www.wikifeet.com',
+    path: '/perl/ajax.fpl',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(postDataString)
+    }
+  };
+
+  pendingRequest = https.request(options, function(res) {
+    console.log(`STATUS: ${res.statusCode}`);
+    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf-8');
+    res.on('data', function(data) {
+      resData += data;
+    });
+
+    res.on('end', function() {
+      responseObject.data = resData;
+      event.sender.send("search:response:end", responseObject);
+    })
+  });
+
+  pendingRequest.on('error', function(e) {
+    if (e.code === "ECONNRESET") {
+      return;
+    }
+    responseObject.error = {};
+    responseObject.error.message = e.message;
+    responseObject.error.code = e.code;
+    responseObject.error.stack = e.stack;
+    console.error(`problem with request: ${e}`);
+    event.sender.send("search:response:end", responseObject);
+  });
+
+  pendingRequest.write(postDataString);
+  pendingRequest.end();
+});

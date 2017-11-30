@@ -1,8 +1,8 @@
 "use strict"
 
+import { ipcRenderer } from 'electron';
 window.$ = window.jQuery = require('jquery');
 const _ = require('underscore');
-const https = require('https');
 const request = require('request');
 const progress = require('request-progress');
 
@@ -14,100 +14,61 @@ var throttled_searchTextChanged = _.throttle(searchTextChanged, 1000, {leading: 
 var $searchBox = $("#search");
 $searchBox.on('input', throttled_searchTextChanged);
 
-function searchTextChanged(e) {
-  var querystring = require('querystring');
-  var resData = '';
-  console.log(e.target.value);
-
-  if (pendingRequest) {
-    pendingRequest.abort();
+ipcRenderer.on("search:response:end", function(event, arg) {
+  if (arg.error) {
+    console.error(arg.error);
+    return;
   }
 
-  const postData = {
-    gender: 0,
-    req: 'suggest',
-    value: e.target.value
-  }
+  const nameRegex = /value='(.*?)';parent.*?encodeURI\('(.*?)'\)/g;
+  var names = [];
+  console.log('FINISHED!');
+  // console.log(resData);
+  arg.data.replace(nameRegex, function nameSelector(match, p1, p2) {
+    names.push({
+      name: p1,
+      uriName: encodeURI(p2)
+    });
+    return null;
+  });
+  // console.log(names);
 
-  console.log(postData);
+  var $selectedElement = $("#selected_element");
+  var $searchResults = $("#search_results");
+  var $ul = $("<ul></ul>");
 
-  const postDataString = querystring.stringify(postData);
+  $searchResults.empty();
+  names.forEach(function(nameObj) {
+    var $li = $(`<li><a href="#">${nameObj.name}</a></li>`);
+    var $a = $li.has("a").first();
 
-  console.log(postDataString);
+    $a.click(function(e) {
+      e.preventDefault();
+      console.log("href-Click abgefangen!");
+      if ($searchBox.is(":disabled")) {
+        var $info = $("#info");
+        $info.empty();
+        $info.append("<p><strong>You have to cancel the pending Download first!</strong></p>");
+        return false;
+      }
 
-  const options = {
-    hostname: 'www.wikifeet.com',
-    path: '/perl/ajax.fpl',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(postDataString)
-    }
-  };
+      $selectedElement.empty();
+      $selectedElement.append(`<h1>${nameObj.name}</h1>`);
+      $selectedElement.append(`<p></p>`);
+      var $downloadButton = $(`<button>Download</button>`);
+      $selectedElement.append($downloadButton);
+      // console.log($downloadButton);
+      $downloadButton.click(nameObj, downloadImages);
 
-  pendingRequest = https.request(options, function(res) {
-    console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf-8');
-    res.on('data', function(data) {
-      resData += data;
     });
 
-    res.on('end', function() {
-      const nameRegex = /value='(.*?)';parent.*?encodeURI\('(.*?)'\)/g;
-      var names = [];
-      console.log('FINISHED!');
-      // console.log(resData);
-      resData.replace(nameRegex, function nameSelector(match, p1, p2) {
-        names.push({
-          name: p1,
-          uriName: encodeURI(p2)
-        });
-        return null;
-      });
-      // console.log(names);
-
-      var $selectedElement = $("#selected_element");
-      var $searchResults = $("#search_results");
-      var $ul = $("<ul></ul>");
-
-      $searchResults.empty();
-      names.forEach(function(nameObj) {
-        var $li = $(`<li><a href="#">${nameObj.name}</a></li>`);
-        var $a = $li.has("a").first();
-
-        $a.click(function(e) {
-          e.preventDefault();
-          console.log("href-Click abgefangen!");
-          if ($searchBox.is(":disabled")) {
-            var $info = $("#info");
-            $info.empty();
-            $info.append("<p><strong>You have to cancel the pending Download first!</strong></p>");
-            return false;
-          }
-
-          $selectedElement.empty();
-          $selectedElement.append(`<h1>${nameObj.name}</h1>`);
-          $selectedElement.append(`<p></p>`);
-          var $downloadButton = $(`<button>Download</button>`);
-          $selectedElement.append($downloadButton);
-          // console.log($downloadButton);
-          $downloadButton.click(nameObj, downloadImages);
-
-        });
-
-        $ul.append($li);
-      });
-      $searchResults.append($ul);
-    })
+    $ul.append($li);
   });
+  $searchResults.append($ul);
+});
 
-  pendingRequest.on('error', function(e) {
-    console.error(`problem with request: ${e.message}`);
-  });
-
-  pendingRequest.write(postDataString);
-  pendingRequest.end();
+function searchTextChanged(e) {
+  ipcRenderer.send("search:request", e.target.value);
 }
 
 function downloadImages(event) {
