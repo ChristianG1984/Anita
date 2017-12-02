@@ -3,6 +3,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 const path = require('path');
 const https = require('https');
+const request = require('request');
+const progress = require('request-progress');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -67,14 +69,15 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 var pendingRequest;
+var canceledImageDownload = false;
 
-ipcMain.on("search:request", function(event, arg) {
+ipcMain.on("search:request", function(event, searchText) {
   var responseObject = {
     data: ''
   };
   var querystring = require('querystring');
   var resData = '';
-  console.log(arg);
+  console.log(searchText);
 
   if (pendingRequest) {
     pendingRequest.abort();
@@ -83,7 +86,7 @@ ipcMain.on("search:request", function(event, arg) {
   const postData = {
     gender: 0,
     req: 'suggest',
-    value: arg
+    value: searchText
   }
 
   console.log(postData);
@@ -130,4 +133,121 @@ ipcMain.on("search:request", function(event, arg) {
 
   pendingRequest.write(postDataString);
   pendingRequest.end();
+});
+
+ipcMain.on("downloadImages:request", function(event, nameObj) {
+  var resData = '';
+  const options = {
+    hostname: 'www.wikifeet.com',
+    path: '/' + nameObj.uriName,
+    method: 'GET'
+  };
+
+  canceledImageDownload = false;
+  pendingRequest = https.request(options, function(res) {
+    console.log(`STATUS: ${res.statusCode}`);
+    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    res.setEncoding('utf-8');
+    res.on('data', function(data) {
+      resData += data;
+    });
+
+    res.on('end', function() {
+      console.log(`resData.length = ${resData.length}`);
+      const cfnameRegex = /messanger\.cfname[ =']+(.*?)';/;
+      const pidRegex = /"pid":"(\d+)"/g;
+      var match;
+      var imageInfo = {
+        imageCount: 0,
+        cfname: '',
+        pids: []
+      }
+      console.log('FINISHED!');
+      // console.log(resData);
+
+      if (match = cfnameRegex.exec(resData)) {
+        imageInfo.cfname = match[1];
+      }
+
+      while (match = pidRegex.exec(resData)) {
+        imageInfo.pids.push(match[1]);
+      }
+      imageInfo.imageCount = imageInfo.pids.length;
+
+      event.sender.send("downloadImages:response:imageCount", imageInfo.imageCount);
+      
+      // console.log(imageInfo);
+
+      downloadFromImageInfo(imageInfo, event);
+    });
+  });
+
+  pendingRequest.on('error', function(e) {
+    console.error(`problem with request: ${e.message}`);
+  });
+  
+  pendingRequest.end();
+})
+
+function downloadFromImageInfo(imageInfo, event) {
+  if (imageInfo.pids.length === 0) {
+    return;
+  }
+
+  var progressInfo = {
+    imageNumber: 0,
+    imageCount: imageInfo.imageCount,
+    percentage: 0,
+    imageUri: ''
+  };
+  var imageUri = imageInfo.cfname + '-Feet-' + imageInfo.pids.shift() + '.jpg';
+  progressInfo.imageUri = imageUri;
+  progressInfo.imageNumber = imageInfo.imageCount - imageInfo.pids.length;
+  var fullImageUri = 'https://pics.wikifeet.com/' + imageUri;
+
+  event.sender.send("downloadImages:response:progress", progressInfo);
+  
+  var req = progress(request(fullImageUri), { throttle: 500 })
+  .on('progress', function onProgress(state) {
+    if (canceledImageDownload === true) {
+      req.abort();
+      return;
+    }
+
+    progressInfo.percentage = Math.round(state.percent * 100);
+    console.log(`percentage: ${progressInfo.percentage}`);
+    event.sender.send("downloadImages:response:progress", progressInfo);
+  })
+  .on('error', function onError(err) {
+    console.log(err);
+    event.sender.send("downloadImages:response:error", {
+      code: err.code,
+      message: err.message,
+      stack: err.stack
+    });
+  })
+  .on('abort', function onAbort() {
+    console.log('Download canceled!');
+  })
+  .on('end', function onEnd() {
+    console.log('Download finished!');
+    if (canceledImageDownload === true) {
+      event.sender.send("downloadImages:response:end", {
+        progressInfo: progressInfo,
+        canceled: true
+      });
+      return;
+    }
+
+    progressInfo.percentage = 100;
+    event.sender.send("downloadImages:response:end", {
+      progressInfo: progressInfo,
+      canceled: false
+    });
+    downloadFromImageInfo(imageInfo, event);
+  });
+}
+
+ipcMain.on("downloadImages:request:cancel", function(event) {
+  canceledImageDownload = true;
 });
