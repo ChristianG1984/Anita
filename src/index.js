@@ -1,6 +1,8 @@
 "use strict"
 
 import { app, BrowserWindow, ipcMain } from 'electron';
+import { setTimeout } from 'timers';
+const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const request = require('request');
@@ -26,13 +28,27 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (process.env.NODE_ENV !== 'production') {
+    mainWindow.webContents.openDevTools();
+  }
+
+  mainWindow.on('close', function(event) {
+    canceledImageDownload = true;
+
+    if (pendingDownload) {
+      event.preventDefault();
+      setTimeout(function() {
+        mainWindow.close();
+      }, 100);
+    }
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -41,6 +57,10 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show();
+  })
 };
 
 // This method will be called when Electron has finished
@@ -70,6 +90,7 @@ app.on('activate', () => {
 
 var pendingRequest;
 var canceledImageDownload = false;
+var pendingDownload = false;
 
 ipcMain.on("search:request", function(event, searchText) {
   var responseObject = {
@@ -135,15 +156,16 @@ ipcMain.on("search:request", function(event, searchText) {
   pendingRequest.end();
 });
 
-ipcMain.on("downloadImages:request", function(event, nameObj) {
+ipcMain.on("downloadImages:request", function(event, requestData) {
   var resData = '';
   const options = {
     hostname: 'www.wikifeet.com',
-    path: '/' + nameObj.uriName,
+    path: '/' + requestData.nameObj.uriName,
     method: 'GET'
   };
 
   canceledImageDownload = false;
+  pendingDownload = true;
   pendingRequest = https.request(options, function(res) {
     console.log(`STATUS: ${res.statusCode}`);
     console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -158,7 +180,9 @@ ipcMain.on("downloadImages:request", function(event, nameObj) {
       const pidRegex = /"pid":"(\d+)"/g;
       var match;
       var imageInfo = {
+        basePath: requestData.basePath,
         imageCount: 0,
+        name: requestData.nameObj.name,
         cfname: '',
         pids: []
       }
@@ -183,6 +207,7 @@ ipcMain.on("downloadImages:request", function(event, nameObj) {
   });
 
   pendingRequest.on('error', function(e) {
+    pendingDownload = false;
     console.error(`problem with request: ${e.message}`);
   });
   
@@ -191,6 +216,7 @@ ipcMain.on("downloadImages:request", function(event, nameObj) {
 
 function downloadFromImageInfo(imageInfo, event) {
   if (imageInfo.pids.length === 0) {
+    pendingDownload = false;
     return;
   }
 
@@ -204,15 +230,44 @@ function downloadFromImageInfo(imageInfo, event) {
   progressInfo.imageUri = imageUri;
   progressInfo.imageNumber = imageInfo.imageCount - imageInfo.pids.length;
   var fullImageUri = 'https://pics.wikifeet.com/' + imageUri;
+  var savePath = path.join(imageInfo.basePath, imageInfo.name, imageUri);
+
+  while (fs.existsSync(savePath)) {
+    if (imageInfo.pids.length === 0) {
+      pendingDownload = false;
+      event.sender.send("downloadImages:response:end", {
+        progressInfo: progressInfo,
+        canceled: false
+      });
+      return;
+    }
+
+    imageUri = imageInfo.cfname + '-Feet-' + imageInfo.pids.shift() + '.jpg';
+    progressInfo.imageUri = imageUri;
+    progressInfo.imageNumber = imageInfo.imageCount - imageInfo.pids.length;
+    fullImageUri = 'https://pics.wikifeet.com/' + imageUri;
+    savePath = path.join(imageInfo.basePath, imageInfo.name, imageUri);
+
+    event.sender.send("downloadImages:response:progress", progressInfo);
+  }
+
+  try {
+    fs.mkdirSync(path.dirname(savePath));
+  } catch (err) {
+    if (err.code !== 'EEXIST') {
+      console.error(err);
+    }
+  }
 
   event.sender.send("downloadImages:response:progress", progressInfo);
   
+  pendingDownload = true;
   var req = progress(request(fullImageUri), { throttle: 500 })
   .on('progress', function onProgress(state) {
-    if (canceledImageDownload === true) {
-      req.abort();
-      return;
-    }
+    // if (canceledImageDownload === true) {
+    //   req.abort();
+    //   return;
+    // }
 
     progressInfo.percentage = Math.round(state.percent * 100);
     console.log(`percentage: ${progressInfo.percentage}`);
@@ -236,6 +291,7 @@ function downloadFromImageInfo(imageInfo, event) {
         progressInfo: progressInfo,
         canceled: true
       });
+      // pendingDownload = false;
       return;
     }
 
@@ -245,6 +301,14 @@ function downloadFromImageInfo(imageInfo, event) {
       canceled: false
     });
     downloadFromImageInfo(imageInfo, event);
+  })
+  .pipe(fs.createWriteStream(savePath))
+  .on('error', function onFileStreamWriteError(error) {
+    console.error(error);
+    pendingDownload = false;
+  })
+  .on('finish', function() {
+    pendingDownload = false;
   });
 }
 

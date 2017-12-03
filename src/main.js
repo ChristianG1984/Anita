@@ -1,21 +1,51 @@
 "use strict"
 
 import { ipcRenderer } from 'electron';
+const { dialog } = require('electron').remote
 window.$ = window.jQuery = require('jquery');
 const _ = require('underscore');
+const Store = require('electron-store');
+const store = new Store();
 
 var throttled_searchTextChanged = _.throttle(searchTextChanged, 1000, {leading: false});
 
 var $searchBox = $("#search");
+var $btnSelectBasePath = $("#btn_select_base_path");
+var $basePath = $("#base_path");
+$basePath.val(store.get('basePath', ''));
+
 $searchBox.on('input', throttled_searchTextChanged);
+$btnSelectBasePath.on('click', btnSelectBasePathClicked);
+
+function btnSelectBasePathClicked(e) {
+  e.preventDefault();
+  var result = dialog.showOpenDialog({properties: ['createDirectory', 'openDirectory']});
+  console.log(result);
+
+  if (result === undefined) {
+    return;
+  }
+
+  $basePath.val(result[0]);
+  store.set('basePath', result[0]);
+
+  if ($basePath.val().length !== 0) {
+    var $info = $("#info");
+    $info.empty();
+  }
+}
 
 function searchTextChanged(e) {
+  var $info = $("#info");
+  $info.empty();
   ipcRenderer.send("search:request", e.target.value);
 }
 
 ipcRenderer.on("search:response:end", function(event, arg) {
   if (arg.error) {
     console.error(arg.error);
+    var $info = $("#info");
+    $info.append(`<p><strong>${arg.error.code}: ${arg.error.message}</strong></p>`);
     return;
   }
 
@@ -72,7 +102,13 @@ function downloadImages(event) {
   var $downloadInfo = $("#selected_element p");
   var $button = $(this);
   var nameObj = event.data;
-  var resData = '';
+
+  if ($basePath.val().length === 0) {
+    var $info = $("#info");
+    $info.empty();
+    $info.append('<p><strong>You have to select the "Base-Path" first!</strong></p>');
+    return;
+  }
 
   $button.unbind("click");
   $button.click(nameObj, cancelDownload);
@@ -82,7 +118,10 @@ function downloadImages(event) {
   // console.log($(this));
 
   $downloadInfo.text("Requesting needed information ...");
-  ipcRenderer.send("downloadImages:request", nameObj);
+  ipcRenderer.send("downloadImages:request", {
+    nameObj: nameObj,
+    basePath: $basePath.val()
+  });
 }
 
 ipcRenderer.on("downloadImages:response:imageCount", function(event, imageCount) {
@@ -103,8 +142,18 @@ ipcRenderer.on("downloadImages:response:end", function(event, reason) {
 
   var progressInfo = reason.progressInfo;
   var $downloadInfo = $("#selected_element p");
-  $downloadInfo.html(`<p>#${progressInfo.imageNumber} of ${progressInfo.imageCount}</p><p>${progressInfo.imageUri} (${progressInfo.percentage}%)</p>`);
-  console.log(`Finished download! (${progressInfo.percentage})`);
+  if (progressInfo.imageNumber === progressInfo.imageCount) {
+    var $selectedElement = $("#selected_element");
+    var $celebName = $selectedElement.find("h1").first();
+    $selectedElement.empty();
+    $selectedElement.append($celebName);
+    $selectedElement.append(`<p><strong>Download finished!</strong></p>`);
+    $searchBox.prop('disabled', false);
+    console.log(`Finished download! (${progressInfo.percentage})`);
+  } else {
+    $downloadInfo.html(`<p>#${progressInfo.imageNumber} of ${progressInfo.imageCount}</p><p>${progressInfo.imageUri} (${progressInfo.percentage}%)</p>`);
+    console.log(`Finished download! (${progressInfo.percentage})`);
+  }
 });
 
 function cancelDownload(event) {

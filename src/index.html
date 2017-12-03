@@ -3,19 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Anita</title>
+    <script type="text/javascript">
+      function noenter() {
+        return !(window.event && window.event.keyCode == 13); }
+    </script>
   </head>
   <body>
     <form>
-      <label for="base_path">Base:</label>
-      <input type="text" id="base_path">
-      <button>...</button>
+      <label for="base_path">Base-Path:</label>
+      <input type="text" id="base_path" onkeypress="return noenter()">
+      <button id="btn_select_base_path">...</button>
       <br>
       <br>
       <div id="selected_element"></div>
       <br>
       <br>
       <label for="search">Search:</label>
-      <input type="text" id="search">
+      <input type="text" id="search" onkeypress="return noenter()">
     </form>
 
     <div id="info"></div>
