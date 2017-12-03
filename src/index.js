@@ -8,6 +8,8 @@ const https = require('https');
 const request = require('request');
 const progress = require('request-progress');
 
+process.env.NODE_ENV = 'production';
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();

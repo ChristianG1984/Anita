@@ -7,6 +7,8 @@ const _ = require('underscore');
 const Store = require('electron-store');
 const store = new Store();
 
+console.log(store.path);
+
 var throttled_searchTextChanged = _.throttle(searchTextChanged, 1000, {leading: false});
 
 var $searchBox = $("#search");
