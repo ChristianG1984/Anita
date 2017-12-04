@@ -1,0 +1,76 @@
+{
+    "name": "anita",
+    "productName": "Anita",
+    "version": "0.1.0",
+    "description": "An app to batch download pictures from wikifeet.com",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "eslint src --color"
+    },
+    "keywords": [],
+    "author": "SachsenCoder",
+    "license": "MIT",
+    "config": {
+        "forge": {
+            "make_targets": {
+                "win32": [
+                    "squirrel",
+                    "zip"
+                ],
+                "darwin": [
+                    "zip"
+                ],
+                "linux": [
+                    "deb",
+                    "rpm"
+                ]
+            },
+            "electronPackagerConfig": {
+                "prune": true,
+                "ignore": ["readme_stuff", "README", "ignore"],
+                "asar": true,
+                "packageManager": "yarn"
+            },
+            "electronWinstallerConfig": {
+                "name": "anita"
+            },
+            "electronInstallerDebian": {},
+            "electronInstallerRedhat": {},
+            "github_repository": {
+                "owner": "SachsenCoder",
+                "name": "Anita"
+            },
+            "windowsStoreConfig": {
+                "packageName": "",
+                "name": "anita"
+            }
+        }
+    },
+    "dependencies": {
+        "electron-compile": "^6.4.2",
+        "electron-squirrel-startup": "^1.0.0",
+        "electron-store": "^1.3.0",
+        "jquery": "^3.2.1",
+        "request": "^2.83.0",
+        "request-progress": "^3.0.0",
+        "underscore": "^1.8.3"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "electron-builder": "^19.47.1",
+        "electron-forge": "^4.1.5",
+        "electron-prebuilt-compile": "1.7.9",
+        "electron-reload": "^1.2.2",
+        "eslint": "^3",
+        "eslint-config-airbnb": "^15",
+        "eslint-plugin-import": "^2",
+        "eslint-plugin-jsx-a11y": "^5",
+        "eslint-plugin-react": "^7"
+    }
+}
