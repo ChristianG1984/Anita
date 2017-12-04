@@ -18,33 +18,17 @@ You can find the latest executable here on Github:
 
 ## Usage Guide ##
 
-After downloading the Zip-Archive, simply extract it and run the executable `Anita.exe`.
+- If you have chosen the setup.exe, just execute it and the app will immediately start after the installation process. You will also find a link in your Start menu.
 
-You should see the following window:
-![Main window after starting the executable](/readme_stuff/shot_02.png)
+- If you have chosen the Zip-Archive, simply extract it and run the executable `Anita.exe`.
 
-On the bottom, there is a textbox, where you can enter the base path for storing the pictures. (You can also click on the button with the three dots to select the path through the folder select dialog.)
-
-If you leave the textbox empty, the pictures will be stored in the same folder from where the executable was started.
-
-The textbox above is reserved for possible error messages.
-
-Now to the more interesting part, the right side. :wink:
-
-From top to the bottom, there is the search textbox, the search result list and the Fetch Data button.
+This shows, how the app is used:
+![Animation about how the app works](/readme_stuff/preview_00.gif)
 
 When you type something into the search textbox, the search on wikifeet.com is instantly started and the results will show up within the result list.
+Pictures, which are already downloaded, will be skipped.
 
-You can see this in the next screenshot:
-![Main window with search results](/readme_stuff/shot_00.png)
-
-After you selected a result, the Fetch Data button will be enabled and you can click on it to automatically download all available pictures of the celebrity in a sub folder which has the same name as the search result.
-
-After you clicked on Fetch Data, you can see the progress of the running download:
-![Main window with search results](/readme_stuff/shot_01.png)
-
-You have not to wait, until the download has finished. You can cancel at any time and continue later. Pictures, which are already downloaded, will be skipped.
-
+If you cancel a download, the current running download will be finished.
 
 That's all to say about how the application currently works. :smiley:
 
@@ -66,8 +50,6 @@ That's all to say about how the application currently works. :smiley:
     When you stumble upon a new celebrity name, you have no clue, how she looks like. A small pic within the search results would be really helpful. (I would grab the pic from imdb.com or so.)
 - **Search not only for the real name, but also for the character name from any movie!**  
     Think of a situation, where you watch a movie and in that situation, you only know the current character/role name of the actress. You could just search for that name and would possibly find her real name. (For that, I would also use imdb.com or so.)
-- **Provide a more detailed progress information**  
-    Some info like "??? MB of ??? MB" downloaded. (But that's not so necessary. I would focus more on the other tasks.)
 
 ### What are the long term goals? ###
 
@@ -77,6 +59,10 @@ That's all to say about how the application currently works. :smiley:
     That project may grow within the progress of _Anita_.
 
 ## For Developers ##
+
+#### Update 04.12.2017: ####
+
+I decided to use the electron-framework for future development.
 
 #### Update 27.04.2013: ####
 

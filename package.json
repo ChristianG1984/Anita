@@ -30,6 +30,9 @@
                 ]
             },
             "electronPackagerConfig": {
+                "prune": true,
+                "ignore": ["readme_stuff", "README", "ignore"],
+                "asar": true,
                 "packageManager": "yarn"
             },
             "electronWinstallerConfig": {
@@ -60,6 +63,7 @@
         "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
+        "electron-builder": "^19.47.1",
         "electron-forge": "^4.1.5",
         "electron-prebuilt-compile": "1.7.9",
         "electron-reload": "^1.2.2",
