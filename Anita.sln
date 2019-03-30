@@ -9,9 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anita.Contracts", "Anita.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anita.Core", "Anita.Core\Anita.Core.csproj", "{EE1BF00C-0CA4-478F-9AEE-588C18E0AE00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anita.Api", "Anita.Api\Anita.Api.csproj", "{FB1BF953-EFDE-4E88-BAAF-7BB6CDDF50E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anita.Api", "Anita.Api\Anita.Api.csproj", "{FB1BF953-EFDE-4E88-BAAF-7BB6CDDF50E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anita.Api.Tests", "Anita.Api.Tests\Anita.Api.Tests.csproj", "{074D1F7E-A060-4F51-9DC3-894E2736BC6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anita.Api.Tests", "Anita.Api.Tests\Anita.Api.Tests.csproj", "{074D1F7E-A060-4F51-9DC3-894E2736BC6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FEC57E12-71C6-4A52-8659-5086E6D4F341}"
+	ProjectSection(SolutionItems) = preProject
+		cake.config = cake.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
