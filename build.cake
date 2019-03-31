@@ -3,48 +3,52 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-Task("Clean")
-    .Does(() =>
-{
-    CleanDirectories("**/bin/" + configuration);
-    CleanDirectories("**/obj/" + configuration);
-    CleanDirectories("./Anita.Api.Tests/TestResults");
-});
-
-Task("Restore")
-    .IsDependentOn("Clean")
-    .Does(() =>
-{
-    // DotNetCoreRestore();
-    NuGetRestore("./Anita.sln");
-});
-
-Task("Build")
-    .IsDependentOn("Restore")
-    .Does(() =>
-{
-    MSBuild("./Anita.sln", new MSBuildSettings {
-        Configuration = configuration
+var cleanTask = Task("Clean")
+    .Does(() => {
+        CleanDirectories("**/bin/" + configuration);
+        CleanDirectories("**/obj/" + configuration);
+        CleanDirectories("./Anita.Api.Tests/TestResults");
     });
-    // DotNetCoreBuild("./Anita.sln", new DotNetCoreBuildSettings {
-    //     Configuration = configuration
-    // });
-});
 
-Task("Test")
-    .IsDependentOn("Build")
-    .Does(() =>
-{
-    DotNetCoreTest("./Anita.Api.Tests/Anita.Api.Tests.csproj", new DotNetCoreTestSettings {
-        Configuration = configuration,
-        NoBuild = true,
-        ArgumentCustomization = args => args
-            .Append("--collect").AppendQuoted("Code Coverage")
-            .Append("--logger").Append("Appveyor")
+var restoreTask = Task("Restore")
+    .IsDependentOn(cleanTask)
+    .Does(() => {
+        // DotNetCoreRestore();
+        NuGetRestore("./Anita.sln");
     });
-});
 
-Task("Default")
-    .IsDependentOn("Test");
+var updateVersionInfos = Task("UpdateVersionInfos")
+    .Does(() => {
+        GitVersion(new GitVersionSettings {
+            UpdateAssemblyInfo = true
+        });
+    });
+
+var buildTask = Task("Build")
+    .IsDependentOn(restoreTask)
+    .IsDependentOn(updateVersionInfos)
+    .Does(() => {
+        MSBuild("./Anita.sln", new MSBuildSettings {
+            Configuration = configuration
+        });
+        // DotNetCoreBuild("./Anita.sln", new DotNetCoreBuildSettings {
+        //     Configuration = configuration
+        // });
+    });
+
+var testTask = Task("Test")
+    .IsDependentOn(buildTask)
+    .Does(() => {
+        DotNetCoreTest("./Anita.Api.Tests/Anita.Api.Tests.csproj", new DotNetCoreTestSettings {
+            Configuration = configuration,
+            NoBuild = true,
+            ArgumentCustomization = args => args
+                .Append("--collect").AppendQuoted("Code Coverage")
+                .Append("--logger").Append("Appveyor")
+        });
+    });
+
+var defaultTask = Task("Default")
+    .IsDependentOn(testTask);
 
 RunTarget(target);
