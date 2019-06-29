@@ -179,7 +179,7 @@ ipcMain.on("downloadImages:request", function(event, requestData) {
     res.on('end', function() {
       console.log(`resData.length = ${resData.length}`);
       const cfnameRegex = /messanger\.cfname[ =']+(.*?)';/;
-      const pidRegex = /"pid":"(\d+)"/g;
+      const pidRegex = /"pid":(\d+)/g;
       var match;
       var imageInfo = {
         basePath: requestData.basePath,

@@ -31,7 +31,11 @@
             },
             "electronPackagerConfig": {
                 "prune": true,
-                "ignore": ["readme_stuff", "README", "ignore"],
+                "ignore": [
+                    "readme_stuff",
+                    "README",
+                    "ignore"
+                ],
                 "asar": true,
                 "packageManager": "yarn"
             },
