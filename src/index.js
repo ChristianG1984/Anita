@@ -94,23 +94,39 @@ var pendingRequest;
 var canceledImageDownload = false;
 var pendingDownload = false;
 
-ipcMain.on("search:request", function(event, searchText) {
+ipcMain.on("search:request", function(event, searchText, useWikifeetX) {
   var responseObject = {
     data: ''
   };
   var querystring = require('querystring');
   var resData = '';
+  var hostname = '';
+  var postData;
   console.log(searchText);
+  console.log(useWikifeetX);
 
   if (pendingRequest) {
     pendingRequest.abort();
   }
-
-  const postData = {
-    gender: 0,
-    req: 'suggest',
-    value: searchText
+  if (useWikifeetX) {
+    console.log("Using wikifeet x")
+    postData = {
+      gender: 'undefined',
+      req: 'suggest',
+      value: searchText
+    }
+    hostname = 'www.wikifeetx.com'
   }
+  else
+  {
+    postData = {
+      gender: '0',
+      req: 'suggest',
+      value: searchText
+    }
+    hostname = 'www.wikifeet.com'
+  }
+
 
   console.log(postData);
 
@@ -119,7 +135,7 @@ ipcMain.on("search:request", function(event, searchText) {
   console.log(postDataString);
 
   const options = {
-    hostname: 'www.wikifeet.com',
+    hostname: hostname,
     path: '/perl/ajax.fpl',
     method: 'POST',
     headers: {
@@ -158,10 +174,20 @@ ipcMain.on("search:request", function(event, searchText) {
   pendingRequest.end();
 });
 
-ipcMain.on("downloadImages:request", function(event, requestData) {
+ipcMain.on("downloadImages:request", function(event, requestData, useWikifeetX) {
   var resData = '';
+  var hostname = '';
+  if (useWikifeetX)
+  {
+    hostname = 'www.wikifeetx.com'
+  }
+  else
+  {
+    hostname = 'www.wikifeet.com'
+  }
+
   const options = {
-    hostname: 'www.wikifeet.com',
+    hostname: hostname,
     path: '/' + requestData.nameObj.uriName,
     method: 'GET'
   };
