@@ -1,7 +1,7 @@
 {
     "name": "anita",
     "productName": "Anita",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "An app to batch download pictures from wikifeet.com",
     "main": "src/index.js",
     "scripts": {
@@ -13,7 +13,7 @@
         "debug": "electron-forge start --inspect-electron"
     },
     "keywords": [],
-    "author": "SachsenCoder",
+    "author": "Reaper36",
     "license": "MIT",
     "config": {
         "forge": {
