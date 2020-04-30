@@ -54,7 +54,7 @@
         "electron-compile": "^6.4.2",
         "electron-squirrel-startup": "^1.0.0",
         "electron-store": "^1.3.0",
-        "jquery": "^3.2.1",
+        "jquery": "^3.5.0",
         "request": "^2.83.0",
         "request-progress": "^3.0.0",
         "underscore": "^1.8.3"
