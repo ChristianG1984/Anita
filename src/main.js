@@ -46,6 +46,27 @@ function searchTextChanged(e) {
   ipcRenderer.send("search:request", e.target.value, $chkUseWikifeetX.prop('checked'));    
 }
 
+
+// Function created to circumvent some of the special URI encoding that Wikifeet uses
+function wikiFeetEncodeURI(uri) {
+  let result = uri;
+  //For somereason replace all does not work,
+  // So im just gonna put it here so most cases if not all should be handled.
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+
+  return result;
+
+  // return encodeURI(result);
+
+}
+
 ipcRenderer.on("search:response:end", function(event, arg) {
   if (arg.error) {
     console.error(arg.error);
@@ -62,7 +83,7 @@ ipcRenderer.on("search:response:end", function(event, arg) {
   while (match = nameRegex.exec(arg.data)) {
     names.push({
       name: match[1],
-      uriName: encodeURI(match[2])
+      uriName: wikiFeetEncodeURI(match[2])
     });
   }
   // console.log(names);

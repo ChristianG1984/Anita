@@ -128,7 +128,7 @@ ipcMain.on("search:request", function(event, searchText, useWikifeetX) {
   }
 
 
-  console.log(postData);
+  // console.log(postData);
 
   const postDataString = querystring.stringify(postData);
 
@@ -146,7 +146,7 @@ ipcMain.on("search:request", function(event, searchText, useWikifeetX) {
 
   pendingRequest = https.request(options, function(res) {
     console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf-8');
     res.on('data', function(data) {
       resData += data;
@@ -186,6 +186,8 @@ ipcMain.on("downloadImages:request", function(event, requestData, useWikifeetX) 
     hostname = 'www.wikifeet.com'
   }
 
+console.log("getting data for: "+requestData.nameObj.uriName)
+
   const options = {
     hostname: hostname,
     path: '/' + requestData.nameObj.uriName,
@@ -196,7 +198,7 @@ ipcMain.on("downloadImages:request", function(event, requestData, useWikifeetX) 
   pendingDownload = true;
   pendingRequest = https.request(options, function(res) {
     console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf-8');
     res.on('data', function(data) {
       resData += data;
