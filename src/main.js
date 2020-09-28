@@ -13,11 +13,14 @@ var throttled_searchTextChanged = _.throttle(searchTextChanged, 1000, {leading: 
 
 var $searchBox = $("#search");
 var $btnSelectBasePath = $("#btn_select_base_path");
+var $chkUseWikifeetX = $("#wikifeetX");
 var $basePath = $("#base_path");
+var $lblSearch = $("#lblSearch");
 $basePath.val(store.get('basePath', ''));
 
 $searchBox.on('input', throttled_searchTextChanged);
 $btnSelectBasePath.on('click', btnSelectBasePathClicked);
+
 
 function btnSelectBasePathClicked(e) {
   e.preventDefault();
@@ -40,7 +43,28 @@ function btnSelectBasePathClicked(e) {
 function searchTextChanged(e) {
   var $info = $("#info");
   $info.empty();
-  ipcRenderer.send("search:request", e.target.value);
+  ipcRenderer.send("search:request", e.target.value, $chkUseWikifeetX.prop('checked'));    
+}
+
+
+// Function created to circumvent some of the special URI encoding that Wikifeet uses
+function wikiFeetEncodeURI(uri) {
+  let result = uri;
+  //For somereason replace all does not work,
+  // So im just gonna put it here so most cases if not all should be handled.
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+  result = result.replace('\\\'', "%27")
+
+  return result;
+
+  // return encodeURI(result);
+
 }
 
 ipcRenderer.on("search:response:end", function(event, arg) {
@@ -55,12 +79,11 @@ ipcRenderer.on("search:response:end", function(event, arg) {
   var names = [];
   var match;
   console.log('FINISHED!');
-  // console.log(resData);
 
   while (match = nameRegex.exec(arg.data)) {
     names.push({
       name: match[1],
-      uriName: encodeURI(match[2])
+      uriName: wikiFeetEncodeURI(match[2])
     });
   }
   // console.log(names);
@@ -123,7 +146,7 @@ function downloadImages(event) {
   ipcRenderer.send("downloadImages:request", {
     nameObj: nameObj,
     basePath: $basePath.val()
-  });
+  }, $chkUseWikifeetX.prop('checked'));
 }
 
 ipcRenderer.on("downloadImages:response:imageCount", function(event, imageCount) {

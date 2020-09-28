@@ -14,7 +14,7 @@ But here is _Anita_ and comes for rescue. :smile:
 ## Download the executable ##
 
 You can find the latest executable here on Github:
-<https://github.com/SachsenCoder/Anita/releases>
+<https://github.com/reaper36/Anita/releases>
 
 ## Usage Guide ##
 

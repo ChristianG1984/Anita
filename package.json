@@ -1,7 +1,7 @@
 {
     "name": "anita",
     "productName": "Anita",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "An app to batch download pictures from wikifeet.com",
     "main": "src/index.js",
     "scripts": {
@@ -9,10 +9,11 @@
         "package": "electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
-        "lint": "eslint src --color"
+        "lint": "eslint src --color",
+        "debug": "electron-forge start --inspect-electron"
     },
     "keywords": [],
-    "author": "SachsenCoder",
+    "author": "Reaper36",
     "license": "MIT",
     "config": {
         "forge": {
@@ -31,7 +32,11 @@
             },
             "electronPackagerConfig": {
                 "prune": true,
-                "ignore": ["readme_stuff", "README", "ignore"],
+                "ignore": [
+                    "readme_stuff",
+                    "README",
+                    "ignore"
+                ],
                 "asar": true,
                 "packageManager": "yarn"
             },
@@ -41,7 +46,7 @@
             "electronInstallerDebian": {},
             "electronInstallerRedhat": {},
             "github_repository": {
-                "owner": "SachsenCoder",
+                "owner": "reaper36",
                 "name": "Anita"
             },
             "windowsStoreConfig": {

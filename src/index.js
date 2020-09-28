@@ -94,32 +94,48 @@ var pendingRequest;
 var canceledImageDownload = false;
 var pendingDownload = false;
 
-ipcMain.on("search:request", function(event, searchText) {
+ipcMain.on("search:request", function(event, searchText, useWikifeetX) {
   var responseObject = {
     data: ''
   };
   var querystring = require('querystring');
   var resData = '';
+  var hostname = '';
+  var postData;
   console.log(searchText);
+  console.log(useWikifeetX);
 
   if (pendingRequest) {
     pendingRequest.abort();
   }
-
-  const postData = {
-    gender: 0,
-    req: 'suggest',
-    value: searchText
+  if (useWikifeetX) {
+    console.log("Using wikifeet x")
+    postData = {
+      gender: 'undefined',
+      req: 'suggest',
+      value: searchText
+    }
+    hostname = 'www.wikifeetx.com'
+  }
+  else
+  {
+    postData = {
+      gender: '0',
+      req: 'suggest',
+      value: searchText
+    }
+    hostname = 'www.wikifeet.com'
   }
 
-  console.log(postData);
+
+  // console.log(postData);
 
   const postDataString = querystring.stringify(postData);
 
   console.log(postDataString);
 
   const options = {
-    hostname: 'www.wikifeet.com',
+    hostname: hostname,
     path: '/perl/ajax.fpl',
     method: 'POST',
     headers: {
@@ -130,7 +146,7 @@ ipcMain.on("search:request", function(event, searchText) {
 
   pendingRequest = https.request(options, function(res) {
     console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf-8');
     res.on('data', function(data) {
       resData += data;
@@ -158,10 +174,22 @@ ipcMain.on("search:request", function(event, searchText) {
   pendingRequest.end();
 });
 
-ipcMain.on("downloadImages:request", function(event, requestData) {
+ipcMain.on("downloadImages:request", function(event, requestData, useWikifeetX) {
   var resData = '';
+  var hostname = '';
+  if (useWikifeetX)
+  {
+    hostname = 'www.wikifeetx.com'
+  }
+  else
+  {
+    hostname = 'www.wikifeet.com'
+  }
+
+console.log("getting data for: "+requestData.nameObj.uriName)
+
   const options = {
-    hostname: 'www.wikifeet.com',
+    hostname: hostname,
     path: '/' + requestData.nameObj.uriName,
     method: 'GET'
   };
@@ -170,7 +198,7 @@ ipcMain.on("downloadImages:request", function(event, requestData) {
   pendingDownload = true;
   pendingRequest = https.request(options, function(res) {
     console.log(`STATUS: ${res.statusCode}`);
-    console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    // console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     res.setEncoding('utf-8');
     res.on('data', function(data) {
       resData += data;
@@ -179,7 +207,7 @@ ipcMain.on("downloadImages:request", function(event, requestData) {
     res.on('end', function() {
       console.log(`resData.length = ${resData.length}`);
       const cfnameRegex = /messanger\.cfname[ =']+(.*?)';/;
-      const pidRegex = /"pid":"(\d+)"/g;
+      const pidRegex = /"pid":(\d+)/g;
       var match;
       var imageInfo = {
         basePath: requestData.basePath,
