@@ -57,7 +57,7 @@
         "jquery": "^3.2.1",
         "request": "^2.83.0",
         "request-progress": "^3.0.0",
-        "underscore": "^1.8.3"
+        "underscore": "^1.12.1"
     },
     "devDependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
